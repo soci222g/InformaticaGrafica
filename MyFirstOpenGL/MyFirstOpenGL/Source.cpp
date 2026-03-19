@@ -1,6 +1,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include<string>
+#include<fstream>
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -11,9 +13,33 @@ void ResizeWindow(GLFWwindow* window, int iNewFrameBufferWidth, int iNewFrameBuf
 	glViewport(0, 0, iNewFrameBufferWidth, iNewFrameBufferHeight);
 
 }
+
+
+
+std::string LoadPath(const std::string& filePath) {
+
+	std::ifstream file (filePath);
+	std::string fileContet;
+	std::string line;
+
+
+	if (!file.is_open()) {
+		std::cout << "error de llegir el archiu puto " << filePath << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+
+	while (std::getline(file, line))
+	{
+		fileContet += line + "\n";
+	}
+	file.close();
+
+	return fileContet;
+}
+
 void main() {
 
-
+	std::cout << "conectar a ficher: " << LoadPath("DeleteME.txt");
 
 
 	//INICIALITZA GLFW per gestiona finestres
@@ -44,7 +70,13 @@ void main() {
 	//activem funcions experimentals per a totes les grafiques
 	glewExperimental = GL_TRUE;
 
+	//activem culling
+	glEnable(GL_CULL_FACE);
 
+	
+
+	//indiquem el gl del culling
+	glCullFace(GL_BACK);
 
 	if (glewInit() == GLEW_OK) {
 		std::cout << "ha funcionat" << std::endl;
@@ -74,8 +106,19 @@ void main() {
 
 
 
+		//dibuixa geometries de debug (per la entrega true o false)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+
+
 		//declarem un punt en el x i y
-		GLfloat puntos[] = { 0.f,0.f };
+		GLfloat puntos[] = {
+				0.5f,0.5f,
+				-0.5f,0.5f,
+				0.5f,-0.5f,
+				-0.5f,-0.5f
+
+		};
 
 
 		//posu el array en el VBO
@@ -109,7 +152,7 @@ void main() {
 			glBindVertexArray(vaoPuntos);
 
 			//definim quiona info estem pintan del vao (en aquest cas punts , des del element 0 fins el 1)
-			glDrawArrays(GL_POINTS, 0, 1);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 			//desativem el VAO
 			glBindVertexArray(0);
