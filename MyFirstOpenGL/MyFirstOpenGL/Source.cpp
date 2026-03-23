@@ -1,12 +1,22 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm.hpp>
 #include <iostream>
 #include<string>
 #include<fstream>
+#include<vector>
+
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
+
+struct ShaderProgram
+{
+	GLuint vertexShader = 0;
+
+
+};
 
 void ResizeWindow(GLFWwindow* window, int iNewFrameBufferWidth, int iNewFrameBufferHeight) {
 	//definir nou tamany
@@ -37,9 +47,99 @@ std::string LoadPath(const std::string& filePath) {
 	return fileContet;
 }
 
+GLuint loadVertexShader(const std::string& path) {
+
+	//creat vertex shader a la GPU
+
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+	//load in memeori the shader
+
+	std::string sShaderCode = LoadPath(path);
+	const char* cShaderSource = sShaderCode.c_str();
+
+	//vinculem a la targeta grafica  (el 1 es el numero de archius que composan el shaders)
+	glShaderSource(vertexShader, 1, &cShaderSource, nullptr);
+
+
+	//compilem el shader
+	glCompileShader(vertexShader);
+
+	//verifiquem la compilacio del shader
+	GLint succes;
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &succes);
+
+
+	if (succes) {
+		return vertexShader;
+	}
+	else {
+		std::cout << " error de carga!!" << std::endl;
+		//primer he,m de saver la longitut del error
+		GLint logLenght;
+		glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &logLenght);
+
+
+		//get the log
+		std::vector<GLchar> errorlog(logLenght);
+		glGetShaderInfoLog(vertexShader, logLenght, nullptr, errorlog.data());
+
+		//mostrem el log
+
+		std::cout << errorlog.data() << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+}
+
+
+GLuint CreateProgram(const ShaderProgram& shader) {
+
+	//creamos programa
+
+	GLuint program = glCreateProgram();
+	//verifiquem si hi ha un vertex shader o no
+	if (shader.vertexShader != 0) {
+		glAttachShader(program, shader.vertexShader);
+	}
+
+	//Linkear el programa
+	glLinkProgram(program);
+
+	//comprobem estat del programa
+
+	GLint succes;
+	glGetProgramiv(program, GL_LINK_STATUS, &succes);
+
+	if (succes) {
+		//llibarem recursos
+		if (shader.vertexShader != 0) {
+			glDetachShader(program, shader.vertexShader);
+
+		}
+		return program;
+	}
+	else {
+		std::cout << " error del programa!!" << std::endl;
+		//pillem el lenght del log
+		GLint logLenght;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLenght);
+
+		//guardem el log
+		std::vector<GLchar> errorlog(logLenght);
+		glGetProgramInfoLog(program, logLenght, nullptr, errorlog.data());
+
+
+		//el printagem i surtim del programa
+		std::cout << errorlog.data() << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+
+
+}
+
 void main() {
 
-	std::cout << "conectar a ficher: " << LoadPath("DeleteME.txt");
+	srand(time(NULL));
 
 
 	//INICIALITZA GLFW per gestiona finestres
@@ -79,8 +179,31 @@ void main() {
 	glCullFace(GL_BACK);
 
 	if (glewInit() == GLEW_OK) {
-		std::cout << "ha funcionat" << std::endl;
 		
+		
+		std::cout << "ha funcionat" << std::endl;
+
+		//compilem shader
+		ShaderProgram myFirstProgram;
+
+		myFirstProgram.vertexShader = loadVertexShader("MyFistVertexShader.glsl");
+
+
+		//compila el programa un cop el shader esta compilat
+		
+		GLuint myfirstCompiledProgram;
+			myfirstCompiledProgram = CreateProgram(myFirstProgram);
+
+
+		
+
+
+		//optenim referencia del element dins del shader
+
+			GLint offsetReference = glGetUniformLocation(myfirstCompiledProgram, "offset");
+
+
+
 		//set el color del buffer  (el de darrera)
 		glClearColor(1.f, 0.f, 0.f, 1.f);
 
@@ -90,7 +213,7 @@ void main() {
 
 		GLuint vaoPuntos, vboPuntos;
 
-
+		GLuint vboPuntos2;
 		//Generop el VAO i m'el Guardo a vaoPuntos
 		glGenVertexArrays(1, &vaoPuntos);
 
@@ -101,10 +224,12 @@ void main() {
 		//amb generas un vbo i m'el guardes.
 		glGenBuffers(1, &vboPuntos);
 
-		//indico qun VBO es el actiu i que esta gaurdan arrays de dades
+		glGenBuffers(1, &vboPuntos2);
+
+		//indico quin VBO es el actiu i que esta gaurdan arrays de dades
 		glBindBuffer(GL_ARRAY_BUFFER, vboPuntos);
 
-
+		glEnableVertexAttribArray(0);
 
 		//dibuixa geometries de debug (per la entrega true o false)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -120,24 +245,109 @@ void main() {
 
 		};
 
-
 		//posu el array en el VBO
 		glBufferData(GL_ARRAY_BUFFER, sizeof(puntos), puntos, GL_STATIC_DRAW);
+		
 
-
-		//definicm com llegir la info del VBO, 
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
 
+		//nategem el buffer amb el vbo
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		//acties les dades de la gpu que els pugui utilitza
-		glEnableVertexAttribArray(0);
+
+
+
+		//bufer 2
+
+
+		GLfloat puntosRandom[] = {
+				static_cast<GLfloat>(rand()) / RAND_MAX * 0.5f,
+				static_cast<GLfloat>(rand()) / RAND_MAX * 0.5f,
+				static_cast<GLfloat>(rand()) / RAND_MAX * 0.5f,
+				static_cast<GLfloat>(rand()) / RAND_MAX * 0.5f,
+
+		};
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, vboPuntos2);
+
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(puntosRandom), puntosRandom, GL_STATIC_DRAW);
+		//el primer numero es el id del vbo que corespon
+		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 1 * sizeof(GLfloat), (GLvoid*)0);
+		//actia el vbo amb el index coresponenet
+		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+
+		//desactivem el vao 
 		glBindVertexArray(0);
+
+
+
+
+		//definicm com llegir la info del VBO, 
+
+
+		//acties les dades de la gpu que els pugui utilitza
+
+		
+
+
+
+
+	
+
+
+
+		//indica a la cpi que utilitzi el programa 
+		glUseProgram(myfirstCompiledProgram);
+
+
+
+		//qui si podem modifica la variable (nomes es pot amb us)
+		glm::vec2 offset = glm::vec2(0.0f, 0.0f);
+
+
+
+		unsigned int LastFremeTime = glfwGetTime();
+		
 
 		while (!glfwWindowShouldClose(window))
 		{
+			unsigned int currentTime = glfwGetTime();
+
+
+
+			unsigned int DeltaTime = currentTime - LastFremeTime;
+
+
+			LastFremeTime = glfwGetTime();
+
+
+
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+				offset.y += 0.01 * DeltaTime;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+				offset.y -= 0.01 * DeltaTime;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+				offset.x -= 0.01 * DeltaTime;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+				offset.x += 0.01 * DeltaTime;
+			}
+
+			
+
+			//una ariable per cada tipo, (2, floats, vector)
+			glUniform2fv(offsetReference, 1, &offset[0]);
+
+			
+			
 			//fem un pull de events
 			glfwPollEvents();
 
@@ -165,6 +375,11 @@ void main() {
 
 		}
 
+
+		//desactivem i alliverem recursos del programa
+		glUseProgram(0); //casquem que el programa que estem utilitzan sigi inactiu per poder modifica
+
+		glDeleteProgram(myfirstCompiledProgram);
 	}
 	else {
 		std::cout << "ha muerto" << std::endl;

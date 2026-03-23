@@ -32,8 +32,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="DeleteME.txt">
+    <None Include="MyFistVertexShader.glsl">
       <Filter>Archivos de recursos\shaders\VertexShader</Filter>
-    </Text>
+    </None>
   </ItemGroup>
 </Project>
