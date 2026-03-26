@@ -14,7 +14,8 @@
 struct ShaderProgram
 {
 	GLuint vertexShader = 0;
-
+	GLuint geometryShader = 0;
+	GLuint fragmentShader = 0;
 
 };
 
@@ -28,7 +29,7 @@ void ResizeWindow(GLFWwindow* window, int iNewFrameBufferWidth, int iNewFrameBuf
 
 std::string LoadPath(const std::string& filePath) {
 
-	std::ifstream file (filePath);
+	std::ifstream file(filePath);
 	std::string fileContet;
 	std::string line;
 
@@ -45,6 +46,88 @@ std::string LoadPath(const std::string& filePath) {
 	file.close();
 
 	return fileContet;
+}
+
+GLuint loadFragmentShader(const std::string& path) {
+
+	GLuint FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	std::string sShaderCode = LoadPath(path);
+	const char* cShaderSource = sShaderCode.c_str();
+
+
+	//vinculem a la targeta grafica  (el 1 es el numero de archius que composan el shaders)
+	glShaderSource(FragmentShader, 1, &cShaderSource, nullptr);
+
+
+	//compilem el shader
+	glCompileShader(FragmentShader);
+
+	//verifiquem la compilacio del shader
+	GLint succes;
+	glGetShaderiv(FragmentShader, GL_COMPILE_STATUS, &succes);
+
+
+	if (succes) {
+		return FragmentShader;
+	}
+	else {
+		std::cout << " error de carga!!" << std::endl;
+		//primer he,m de saver la longitut del error
+		GLint logLenght;
+		glGetShaderiv(FragmentShader, GL_INFO_LOG_LENGTH, &logLenght);
+
+
+		//get the log
+		std::vector<GLchar> errorlog(logLenght);
+		glGetShaderInfoLog(FragmentShader, logLenght, nullptr, errorlog.data());
+
+		//mostrem el log
+
+		std::cout << errorlog.data() << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+}
+
+GLuint loadGeometryShader(const std::string& path) {
+
+	GLuint GeometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+
+	std::string sShaderCode = LoadPath(path);
+	const char* cShaderSource = sShaderCode.c_str();
+
+
+	//vinculem a la targeta grafica  (el 1 es el numero de archius que composan el shaders)
+	glShaderSource(GeometryShader, 1, &cShaderSource, nullptr);
+
+
+	//compilem el shader
+	glCompileShader(GeometryShader);
+
+	//verifiquem la compilacio del shader
+	GLint succes;
+	glGetShaderiv(GeometryShader, GL_COMPILE_STATUS, &succes);
+
+
+	if (succes) {
+		return GeometryShader;
+	}
+	else {
+		std::cout << " error de carga!!" << std::endl;
+		//primer he,m de saver la longitut del error
+		GLint logLenght;
+		glGetShaderiv(GeometryShader, GL_INFO_LOG_LENGTH, &logLenght);
+
+
+		//get the log
+		std::vector<GLchar> errorlog(logLenght);
+		glGetShaderInfoLog(GeometryShader, logLenght, nullptr, errorlog.data());
+
+		//mostrem el log
+
+		std::cout << errorlog.data() << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 }
 
 GLuint loadVertexShader(const std::string& path) {
@@ -97,9 +180,16 @@ GLuint CreateProgram(const ShaderProgram& shader) {
 	//creamos programa
 
 	GLuint program = glCreateProgram();
+
 	//verifiquem si hi ha un vertex shader o no
 	if (shader.vertexShader != 0) {
 		glAttachShader(program, shader.vertexShader);
+	}
+	if (shader.geometryShader != 0) {
+		glAttachShader(program, shader.geometryShader);
+	}
+	if (shader.fragmentShader != 0) {
+		glAttachShader(program, shader.fragmentShader);
 	}
 
 	//Linkear el programa
@@ -116,6 +206,15 @@ GLuint CreateProgram(const ShaderProgram& shader) {
 			glDetachShader(program, shader.vertexShader);
 
 		}
+		if (shader.geometryShader != 0) {
+			glDetachShader(program, shader.geometryShader);
+
+		}
+		if (shader.fragmentShader != 0) {
+			glDetachShader(program, shader.fragmentShader);
+
+		}
+
 		return program;
 	}
 	else {
@@ -151,8 +250,8 @@ void main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	//vercio principal AKA OPenGl 4.4
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); //configura si es escalabla la finestra
 
@@ -162,7 +261,7 @@ void main() {
 
 
 	glfwSetFramebufferSizeCallback(window, ResizeWindow);
-	
+
 	//definim la finestra
 	glfwMakeContextCurrent(window);
 
@@ -173,39 +272,40 @@ void main() {
 	//activem culling
 	glEnable(GL_CULL_FACE);
 
-	
+
 
 	//indiquem el gl del culling
 	glCullFace(GL_BACK);
 
 	if (glewInit() == GLEW_OK) {
-		
-		
+
+
 		std::cout << "ha funcionat" << std::endl;
 
 		//compilem shader
 		ShaderProgram myFirstProgram;
 
 		myFirstProgram.vertexShader = loadVertexShader("MyFistVertexShader.glsl");
-
+		myFirstProgram.geometryShader = loadGeometryShader("MyFirstGeometryShader.glsl");
+		myFirstProgram.geometryShader = loadFragmentShader("MyFirstFragmentShader.glsl");
 
 		//compila el programa un cop el shader esta compilat
-		
+
 		GLuint myfirstCompiledProgram;
-			myfirstCompiledProgram = CreateProgram(myFirstProgram);
+		myfirstCompiledProgram = CreateProgram(myFirstProgram);
 
 
-		
+
 
 
 		//optenim referencia del element dins del shader
 
-			GLint offsetReference = glGetUniformLocation(myfirstCompiledProgram, "offset");
+		GLint offsetReference = glGetUniformLocation(myfirstCompiledProgram, "offset");
 
 
 
 		//set el color del buffer  (el de darrera)
-		glClearColor(1.f, 0.f, 0.f, 1.f);
+		glClearColor(0.f, 1.f, 0.f, 1.f);
 
 
 
@@ -238,16 +338,15 @@ void main() {
 
 		//declarem un punt en el x i y
 		GLfloat puntos[] = {
-				0.5f,0.5f,
-				-0.5f,0.5f,
-				0.5f,-0.5f,
-				-0.5f,-0.5f
+				-0.5f, -0.25f,
+				0.5f,-0.25f,
+				0.0f,0.6f,
 
 		};
 
 		//posu el array en el VBO
 		glBufferData(GL_ARRAY_BUFFER, sizeof(puntos), puntos, GL_STATIC_DRAW);
-		
+
 
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
 
@@ -292,12 +391,12 @@ void main() {
 
 		//acties les dades de la gpu que els pugui utilitza
 
-		
 
 
 
 
-	
+
+
 
 
 
@@ -312,7 +411,7 @@ void main() {
 
 
 		unsigned int LastFremeTime = glfwGetTime();
-		
+
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -341,28 +440,28 @@ void main() {
 				offset.x += 0.01 * DeltaTime;
 			}
 
-			
+
 
 			//una ariable per cada tipo, (2, floats, vector)
 			glUniform2fv(offsetReference, 1, &offset[0]);
 
-			
-			
+
+
 			//fem un pull de events
 			glfwPollEvents();
 
 
-		
+
 			//clear buffers
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			
+
 
 
 			//cridem a la geometria del VAO ( el VBO esta dintre de aquest)
 			glBindVertexArray(vaoPuntos);
 
 			//definim quiona info estem pintan del vao (en aquest cas punts , des del element 0 fins el 1)
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
 
 			//desativem el VAO
 			glBindVertexArray(0);
@@ -378,7 +477,6 @@ void main() {
 
 		//desactivem i alliverem recursos del programa
 		glUseProgram(0); //casquem que el programa que estem utilitzan sigi inactiu per poder modifica
-
 		glDeleteProgram(myfirstCompiledProgram);
 	}
 	else {

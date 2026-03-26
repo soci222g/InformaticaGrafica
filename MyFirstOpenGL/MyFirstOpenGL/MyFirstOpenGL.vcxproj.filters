@@ -35,5 +35,11 @@
     <None Include="MyFistVertexShader.glsl">
       <Filter>Archivos de recursos\shaders\VertexShader</Filter>
     </None>
+    <None Include="MyFirstGeometryShader.glsl">
+      <Filter>Archivos de recursos\shaders\GeometryShader</Filter>
+    </None>
+    <None Include="MyFirstFragmentShader.glsl">
+      <Filter>Archivos de recursos\shaders\FragmentShader</Filter>
+    </None>
   </ItemGroup>
 </Project>
