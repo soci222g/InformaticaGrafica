@@ -1,6 +1,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
+#include <gtc/type_ptr.hpp>
+#include <gtc/matrix_transform.hpp>
 #include <iostream>
 #include<string>
 #include<fstream>
@@ -19,11 +21,39 @@ struct ShaderProgram
 
 };
 
+
+struct GameObjects
+{
+	glm::vec3 position = glm::vec3(0.f);
+	glm::vec3 rotation = glm::vec3(0.f);
+
+
+	glm::vec3 forward = glm::vec3(1.f,0.f,0.f);
+	glm::vec3 Up = glm::vec3(0.f,1.f,0.f);
+
+	float velocity = 0.01f;
+	float angularVelocity = 1;
+
+
+
+
+};
+
 void ResizeWindow(GLFWwindow* window, int iNewFrameBufferWidth, int iNewFrameBufferHeight) {
 	//definir nou tamany
 	glViewport(0, 0, iNewFrameBufferWidth, iNewFrameBufferHeight);
 
 }
+
+glm::mat4 GenerateTranslationMatrix(glm::vec3 translation) {
+	return glm::translate(glm::mat4(1.0f), translation);
+
+}
+glm::mat4 GenerateRotationMatrix(glm::vec3 axi, float fdegrees) {
+	return glm::rotate(glm::mat4(1.0f), glm::radians(fdegrees), glm::normalize(axi));
+
+}
+
 
 
 
@@ -295,17 +325,20 @@ void main() {
 		myfirstCompiledProgram = CreateProgram(myFirstProgram);
 
 
+		//declarem struc game object
+		GameObjects cube;
+
 
 
 
 		//optenim referencia del element dins del shader
 
 		GLint offsetReference = glGetUniformLocation(myfirstCompiledProgram, "offset");
-
+		 
 
 
 		//set el color del buffer  (el de darrera)
-		glClearColor(0.f, 1.f, 0.f, 1.f);
+		glClearColor(0.f, 0.f, 0.f, 1.f);
 
 
 
@@ -332,15 +365,27 @@ void main() {
 		glEnableVertexAttribArray(0);
 
 		//dibuixa geometries de debug (per la entrega true o false)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
 
 		//declarem un punt en el x i y
 		GLfloat puntos[] = {
-				-0.5f, -0.25f,
-				0.5f,-0.25f,
-				0.0f,0.6f,
+				-0.5f,0.5f,-0.5f,
+				0.5f,0.5f, -0.5f,
+				-0.5f,-0.5f, -0.5f,
+				0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,0.5f,
+				0.5f,0.5f, -0.5f,
+				0.5f,0.5f,0.5f,
+				-0.5f,0.5f,-0.5f,
+				-0.5f,0.5f,0.5f,
+				-0.5f,-0.5f, -0.5f,
+				-0.5f,-0.5f, 0.5f,
+				0.5f,-0.5f,0.5f,
+				-0.5f,0.5f,0.5f,
+				0.5f,0.5f,0.5f
+
 
 		};
 
@@ -348,7 +393,7 @@ void main() {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(puntos), puntos, GL_STATIC_DRAW);
 
 
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 
 		//nategem el buffer amb el vbo
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -386,24 +431,16 @@ void main() {
 
 
 
-		//definicm com llegir la info del VBO, 
 
-
-		//acties les dades de la gpu que els pugui utilitza
-
-
-
-
-
-
-
-
+		//generem el model de la matriu MVP
+		
 
 
 		//indica a la cpi que utilitzi el programa 
 		glUseProgram(myfirstCompiledProgram);
 
 
+		glUniform2f(glGetUniformLocation(myfirstCompiledProgram, "WindowSize"), WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		//qui si podem modifica la variable (nomes es pot amb us)
 		glm::vec2 offset = glm::vec2(0.0f, 0.0f);
@@ -411,6 +448,8 @@ void main() {
 
 
 		unsigned int LastFremeTime = glfwGetTime();
+
+
 
 
 		while (!glfwWindowShouldClose(window))
@@ -440,11 +479,38 @@ void main() {
 				offset.x += 0.01 * DeltaTime;
 			}
 
+			
+			glm::mat4 cubeModelMatrix = glm::mat4(1.0f);
 
+			cube.position = cube.position + cube.forward * cube.velocity;
+			cube.rotation = cube.rotation + cube.Up * cube.angularVelocity;
+
+
+			//invertim direccio si surt dels limits
+
+			if (cube.position.x >= 0.5f || cube.position.x <= -0.5f) {
+				cube.forward = cube.forward * -1.f;
+
+			}
+
+		
+
+
+
+			glm::mat4 cubeTranslacioMatrix = GenerateTranslationMatrix(cube.position);
+			glm::mat4 rotationMatrix = GenerateRotationMatrix(glm::vec3(1.f,1.f,0.f), cube.rotation.y);
+
+
+			cubeModelMatrix = cubeTranslacioMatrix * rotationMatrix * cubeModelMatrix;
+
+			glUniformMatrix4fv(glGetUniformLocation(myfirstCompiledProgram, "transform"), 1, GL_FALSE, glm::value_ptr(cubeModelMatrix));
+			
+
+
+		
 
 			//una ariable per cada tipo, (2, floats, vector)
 			glUniform2fv(offsetReference, 1, &offset[0]);
-
 
 
 			//fem un pull de events
@@ -461,7 +527,7 @@ void main() {
 			glBindVertexArray(vaoPuntos);
 
 			//definim quiona info estem pintan del vao (en aquest cas punts , des del element 0 fins el 1)
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 14);
 
 			//desativem el VAO
 			glBindVertexArray(0);
