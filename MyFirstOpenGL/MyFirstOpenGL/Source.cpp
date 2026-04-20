@@ -26,6 +26,7 @@ struct GameObjects
 {
 	glm::vec3 position = glm::vec3(0.f);
 	glm::vec3 rotation = glm::vec3(0.f);
+	glm::vec3 scale = glm::vec3(0.f);
 
 
 	glm::vec3 forward = glm::vec3(1.f,0.f,0.f);
@@ -39,6 +40,23 @@ struct GameObjects
 
 };
 
+
+struct Camera
+{
+	//aixo hauria de ereda de game object
+	glm::vec3 position = glm::vec3(0.5f,0.5f,1.f);
+	glm::vec3 localVectorUp = glm::vec3(0.f, 1.f, 0.f);
+	glm::vec3 scale = glm::vec3(0.f);
+
+
+
+	float fFov = 45;
+	float fNear = 0.1f;
+	float fFar = 10.f;
+};
+
+
+
 void ResizeWindow(GLFWwindow* window, int iNewFrameBufferWidth, int iNewFrameBufferHeight) {
 	//definir nou tamany
 	glViewport(0, 0, iNewFrameBufferWidth, iNewFrameBufferHeight);
@@ -51,6 +69,10 @@ glm::mat4 GenerateTranslationMatrix(glm::vec3 translation) {
 }
 glm::mat4 GenerateRotationMatrix(glm::vec3 axi, float fdegrees) {
 	return glm::rotate(glm::mat4(1.0f), glm::radians(fdegrees), glm::normalize(axi));
+
+}
+glm::mat4 GenerateScaleMatrix(glm::vec3 axi) {
+	return glm::scale(glm::mat4(1.0f), axi);
 
 }
 
@@ -317,7 +339,7 @@ void main() {
 
 		myFirstProgram.vertexShader = loadVertexShader("MyFistVertexShader.glsl");
 		myFirstProgram.geometryShader = loadGeometryShader("MyFirstGeometryShader.glsl");
-		myFirstProgram.geometryShader = loadFragmentShader("MyFirstFragmentShader.glsl");
+		myFirstProgram.fragmentShader = loadFragmentShader("MyFirstFragmentShader.glsl");
 
 		//compila el programa un cop el shader esta compilat
 
@@ -329,6 +351,7 @@ void main() {
 		GameObjects cube;
 
 
+		Camera camera;
 
 
 		//optenim referencia del element dins del shader
@@ -365,7 +388,7 @@ void main() {
 		glEnableVertexAttribArray(0);
 
 		//dibuixa geometries de debug (per la entrega true o false)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
 
@@ -443,14 +466,14 @@ void main() {
 		glUniform2f(glGetUniformLocation(myfirstCompiledProgram, "WindowSize"), WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		//qui si podem modifica la variable (nomes es pot amb us)
-		glm::vec2 offset = glm::vec2(0.0f, 0.0f);
+		glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.f);
 
 
 
 		unsigned int LastFremeTime = glfwGetTime();
 
 
-
+		glBindVertexArray(vaoPuntos);
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -479,35 +502,65 @@ void main() {
 				offset.x += 0.01 * DeltaTime;
 			}
 
-			
-			glm::mat4 cubeModelMatrix = glm::mat4(1.0f);
 
-			cube.position = cube.position + cube.forward * cube.velocity;
-			cube.rotation = cube.rotation + cube.Up * cube.angularVelocity;
-
-
-			//invertim direccio si surt dels limits
-
-			if (cube.position.x >= 0.5f || cube.position.x <= -0.5f) {
-				cube.forward = cube.forward * -1.f;
-
+			if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+				offset.z -= 0.01 * DeltaTime;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
+				offset.z += 0.01 * DeltaTime;
 			}
 
+			if (glfwGetKey(window, GLFW_KEY_COMMA) == GLFW_PRESS) {
+				camera.fFov += 0.1f;
+			}
+			else if (glfwGetKey(window, GLFW_KEY_PERIOD) == GLFW_PRESS) {
+				camera.fFov -= 0.1f ;
+			}
+
+
+			camera.position.x += offset.x;
+			camera.position.y += offset.y;
+			camera.position.z += offset.z;
+
+
+
+
+
+			//setegem el transform del objecta
+			cube.position = glm::vec3(0.5f, 0.5f, 0.f);
+			cube.rotation = glm::vec3(0.f, 45.f, 0.f);
+			cube.scale = glm::vec3(0.7f, 0.7f, 0.7f);
+
+			//generem matrius de transformacio
+			glm::mat4 cubeTranslacioMatrix = GenerateTranslationMatrix(cube.position);
+			glm::mat4 rotationMatrix = GenerateRotationMatrix(cube.rotation, cube.rotation.y);
+			glm::mat4 scaleMatrix = GenerateScaleMatrix(cube.scale);
+
+
+			//generem matriu de vista 
+
+
 		
 
+			//aixo calcula una lloc a on te que mira la camara  ("posicio original", "Dureccio ", "rotacio de la camara );
+			glm::mat4 viewMatrix = glm::lookAt(camera.position, camera.position + glm::vec3(0.f, 0.f, -1.f), camera.localVectorUp);
 
 
-			glm::mat4 cubeTranslacioMatrix = GenerateTranslationMatrix(cube.position);
-			glm::mat4 rotationMatrix = GenerateRotationMatrix(glm::vec3(1.f,1.f,0.f), cube.rotation.y);
+			glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera.fFov), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, camera.fNear, camera.fFar);
+			//glm::mat4 projectionMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, camera.fNear, camera.fFar);
 
+	
 
-			cubeModelMatrix = cubeTranslacioMatrix * rotationMatrix * cubeModelMatrix;
+			glUniformMatrix4fv(glGetUniformLocation(myfirstCompiledProgram, "translationMatrix"), 1, GL_FALSE, glm::value_ptr(cubeTranslacioMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(myfirstCompiledProgram, "rotationMatrix"), 1, GL_FALSE, glm::value_ptr(rotationMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(myfirstCompiledProgram, "scaleMatrix"), 1, GL_FALSE, glm::value_ptr(scaleMatrix));		
 
-			glUniformMatrix4fv(glGetUniformLocation(myfirstCompiledProgram, "transform"), 1, GL_FALSE, glm::value_ptr(cubeModelMatrix));
+			glUniformMatrix4fv(glGetUniformLocation(myfirstCompiledProgram, "viewMatrix"), 1, GL_FALSE, glm::value_ptr(viewMatrix));		
+			glUniformMatrix4fv(glGetUniformLocation(myfirstCompiledProgram, "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
 			
 
 
-		
 
 			//una ariable per cada tipo, (2, floats, vector)
 			glUniform2fv(offsetReference, 1, &offset[0]);

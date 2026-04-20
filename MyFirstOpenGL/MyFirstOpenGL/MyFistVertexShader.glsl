@@ -4,10 +4,15 @@ layout (location = 0) in vec3 position;
 
 uniform vec2 offset;
 
-uniform mat4 transform;
+
+uniform mat4 translationMatrix;
+uniform mat4 rotationMatrix;
+uniform mat4 scaleMatrix;
 
 void main(){
 	
-	gl_Position = transform * vec4 (position, 1.0);
+
+	mat4 model = translationMatrix * rotationMatrix * scaleMatrix;
+	gl_Position = model * vec4 (position, 1.0);
 
 }
