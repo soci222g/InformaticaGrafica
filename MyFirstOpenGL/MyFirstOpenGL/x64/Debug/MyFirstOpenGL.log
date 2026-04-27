@@ -1,37 +1,41 @@
-﻿  Source.cpp
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(291,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(293,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(473,30): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(480,29): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(487,31): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(492,22): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(492,22): warning C4244:         with
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(492,22): warning C4244:         [
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(492,22): warning C4244:             T=float
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(492,22): warning C4244:         ]
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(495,22): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(495,22): warning C4244:         with
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(495,22): warning C4244:         [
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(495,22): warning C4244:             T=float
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(495,22): warning C4244:         ]
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(499,22): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(499,22): warning C4244:         with
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(499,22): warning C4244:         [
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(499,22): warning C4244:             T=float
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(499,22): warning C4244:         ]
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(502,22): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(502,22): warning C4244:         with
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(502,22): warning C4244:         [
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(502,22): warning C4244:             T=float
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(502,22): warning C4244:         ]
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(507,22): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(507,22): warning C4244:         with
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(507,22): warning C4244:         [
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(507,22): warning C4244:             T=float
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(507,22): warning C4244:         ]
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(510,22): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(510,22): warning C4244:         with
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(510,22): warning C4244:         [
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(510,22): warning C4244:             T=float
-C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(510,22): warning C4244:         ]
+﻿  Model.cpp
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Model.cpp(7,34): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Source.cpp
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(93,16): warning C4129: '_': unrecognized character escape sequence
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(410,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(412,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(597,30): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(604,29): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(611,31): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(614,22): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(614,22): warning C4244:         with
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(614,22): warning C4244:         [
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(614,22): warning C4244:             T=float
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(614,22): warning C4244:         ]
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(617,22): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(617,22): warning C4244:         with
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(617,22): warning C4244:         [
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(617,22): warning C4244:             T=float
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(617,22): warning C4244:         ]
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(621,22): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(621,22): warning C4244:         with
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(621,22): warning C4244:         [
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(621,22): warning C4244:             T=float
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(621,22): warning C4244:         ]
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(624,22): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(624,22): warning C4244:         with
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(624,22): warning C4244:         [
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(624,22): warning C4244:             T=float
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(624,22): warning C4244:         ]
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(629,22): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(629,22): warning C4244:         with
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(629,22): warning C4244:         [
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(629,22): warning C4244:             T=float
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(629,22): warning C4244:         ]
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(632,22): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(632,22): warning C4244:         with
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(632,22): warning C4244:         [
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(632,22): warning C4244:             T=float
+C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\MyFirstOpenGL\Source.cpp(632,22): warning C4244:         ]
+  Generating Code...
   MyFirstOpenGL.vcxproj -> C:\Users\JordiGratacosGamper\Documents\InformaticaGrafica\MyFirstOpenGL\x64\Debug\MyFirstOpenGL.exe

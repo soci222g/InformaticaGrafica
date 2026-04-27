@@ -12,7 +12,7 @@ uniform mat4 scaleMatrix;
 void main(){
 	
 
-	mat4 model = translationMatrix * rotationMatrix * scaleMatrix;
-	gl_Position = model * vec4 (position, 1.0);
-
+	//mat4 model = translationMatrix * rotationMatrix * scaleMatrix;
+	//gl_Position = model * vec4(position, 1.0);
+	gl_Position = vec4(position, 1.0);
 }
